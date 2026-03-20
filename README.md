@@ -1,12 +1,22 @@
 # codex-cli-usage-process
 
-一个用于展示 Codex CLI 额度使用情况的小型插件项目。
+一个用于展示 Codex CLI 额度使用情况的本地插件工具。
 
-它的目标很直接：把你当前账号的 5 小时额度、周额度、重置时间，以及可用 credits 以更容易观察的方式展示出来，并提供安装到 Codex CLI 的 MCP 能力。
+它会读取当前账号的真实用量数据，把 5 小时额度、周额度、重置时间和 credits 以终端面板、单行状态、JSON 快照和 MCP 工具的形式暴露出来。
 
-## 软件简介
+## 一句话介绍
 
-这个项目不是修改 Codex CLI 本体，而是提供一个独立的本地插件程序：
+这是一个不修改 Codex CLI 本体、但能接入 Codex CLI 使用的“外挂式用量插件”。
+
+## 首页摘要
+
+- 读取真实 Codex 额度，不是手填假数据
+- 默认优先走本机 `codex app-server`
+- 支持终端实时面板、脚本状态输出、MCP 调用
+- 支持一键安装 / 卸载
+- 保留自定义 JSON 接口映射能力
+
+## 它能做什么
 
 - 优先通过本机 `codex app-server` 读取真实额度
 - 本地 RPC 不可用时，回退到 `~/.codex/auth.json` 对应的真实用量接口
@@ -14,14 +24,37 @@
 - 可以输出终端实时面板、单行状态、JSON 快照
 - 可以一键安装 / 卸载到 Codex CLI 的 `~/.codex/config.toml`
 
-## 适合什么场景
+## 它不能做什么
+
+- 不能直接修改 Codex CLI 本体界面
+- 不能稳定嵌入官方对话框底部进度条
+- 目前仍然依赖本地 CLI / MCP 方式接入
+
+## 适合的场景
 
 - 想快速知道 Codex 5 小时额度还剩多少
 - 想知道周额度是否快用完
 - 想把额度信息接到脚本、状态栏或其他工具里
 - 想在 Codex CLI 中通过 MCP 读取当前用量
 
-## 当前实现方式
+## 30 秒上手
+
+```bash
+node ./bin/codex-usage-plugin.js init-config
+node ./bin/codex-usage-plugin.js validate-config
+node ./bin/codex-usage-plugin.js status
+node ./bin/codex-usage-plugin.js install
+```
+
+常用命令：
+
+```bash
+node ./bin/codex-usage-plugin.js status
+node ./bin/codex-usage-plugin.js watch --interval 30
+node ./bin/codex-usage-plugin.js json
+```
+
+## 工作方式
 
 官方 Codex CLI 目前没有公开、稳定的第三方“对话框底部内嵌进度条”扩展接口。
 
@@ -32,7 +65,7 @@
 - 一个实时刷新的终端面板
 - 一个适合脚本调用的单行状态输出
 
-## 真实额度来源
+## 数据来源
 
 参考 `CodexBar` 的实现，项目默认使用下面这条链路读取真实额度：
 
@@ -50,6 +83,15 @@
 - 1 周窗口已用百分比
 - 各窗口重置时间
 - credits 余额
+
+## 输出形式
+
+你可以把它当成 4 种东西来用：
+
+- 一个终端命令：`status`
+- 一个实时面板：`watch`
+- 一个结构化接口：`json`
+- 一个 Codex CLI MCP 工具：`get_usage_snapshot`
 
 ### 回退：本机登录凭证 + 用量接口
 
