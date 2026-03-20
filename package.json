@@ -1,0 +1,17 @@
+{
+  "name": "codex-cli-usage-plugin",
+  "version": "0.1.0",
+  "description": "Codex CLI usage panel plugin with install/uninstall and MCP integration",
+  "type": "module",
+  "bin": {
+    "codex-usage-plugin": "./bin/codex-usage-plugin.js"
+  },
+  "scripts": {
+    "start": "node ./bin/codex-usage-plugin.js",
+    "lint": "node ./bin/codex-usage-plugin.js validate-config"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
